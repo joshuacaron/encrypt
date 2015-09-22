@@ -1,4 +1,6 @@
 var crypto = require('crypto')
+var Polynomial = require('./polynomial.js')
+var poly = require('./polynomial-operations.js')
 
 var message = 'test123'
 var password = 'swagyolo'
@@ -48,50 +50,6 @@ function generateSecureRandom(min, max, callback) {
     var random = Math.round(integer / 0xffffffffffffffff * (max - min) + min) // Normalize the number between 0 to 1 and then scale it to the correct range
     callback(random) // crypto.randomBytes is asynchronous so we need to return the random number as a callback
   })
-}
-
-/**
- * Models mathematical Polynomials with real valued coefficients.
- * @constructor
- * @param {array} coefficients An array of the coffeficients of the Polynomial ordered by index, ascending.
- */
-function Polynomial(coefficients) {
-  if (typeof coefficients === 'object') {
-    this.coefficients = coefficients
-  } else {
-    console.error(new Error('The coefficients of a Polynomial must be an array.'))
-    this.coefficients = []
-  }
-}
-
-/**
- * Calculates the value of a Polynomial at a specific point.
- * @param  {number} point The point the Polynomial should be evaluated at.
- * @return {number}       The value of the Polynomial at the point.
- */
-Polynomial.prototype.evaluate = function(point) {
-  var value = 0
-  for (var i = 0; i < this.coefficients.length; ++i) {
-    value += this.coefficients[i] * Math.pow(point, i)
-  }
-  return value
-}
-
-Polynomial.prototype.scalarMult = function(constant) {
-  for (var i = 0; i < this.coefficients.length; ++i) {
-    this.coefficients[i] = this.coefficients[i] * constant
-  }
-}
-
-function addPolynomials(poly1, poly2) {
-  var coefficients = []
-  for (var i = 0; i < poly1.coefficients.length; ++i) {
-    var sum = poly1.coefficients[i] + poly2.coefficients[i]
-    coefficients.push(sum)
-  }
-
-  var output = new Polynomial(coefficients)
-  return output
 }
 
 /**
@@ -178,14 +136,12 @@ function iterateIndices(indices, maxSize, omitIndex) {
         indices[i] += 1
 
         for (var j = i + 1; j < indices.length - 1; ++j) {
-          if (j !== omitIndex && j - 1 !== omitIndex) {
-            indices[j] = indices[j - 1] + 1
-          }
-          else if (j - 1 == omitIndex && j - 2 >= 0) {
-            indices[j] = indices[j - 2]
-          }
-          else {
-            indices[j] = 0
+          indices[j] = indices[j - 1] + 1
+        }
+
+        for (var k = 0; k < indices.length; ++k) {
+          if (indices[k] === omitIndex) {
+            return iterateIndices(indices, maxSize, omitIndex)
           }
         }
 
@@ -268,7 +224,8 @@ function createLagrangeBasisPolynomial(array, index) {
     coefficients.push(temp)
   }
 
-  return new Polynomial(coefficients)
+  var output = Polynomial(coefficients)
+  return output
 }
 
 function interpolate(xs, ys, order) {
@@ -283,7 +240,7 @@ function interpolate(xs, ys, order) {
     var lbp = createLagrangeBasisPolynomial(xs, j)
     console.log(lbp)
     lbp.scalarMult(ys[j])
-    output = addPolynomials(output, lbp)
+    output = poly.add(output, lbp)
   }
 
   return output

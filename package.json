@@ -4,12 +4,12 @@
   "description": "An encryption program with support for multipart keys.",
   "main": "encrypt.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha",
+    "jsdoc": "jsdoc *.js README.md"
   },
   "author": "Joshua Caron <joshua@joshuacaron.ca>",
   "license": "MIT",
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
     "mocha": "^2.3.3"
   }
