@@ -5,7 +5,7 @@
   "main": "encrypt.js",
   "scripts": {
     "test": "mocha",
-    "jsdoc": "jsdoc *.js README.md"
+    "jsdoc": "jsdoc *.js README.md -d docs"
   },
   "author": "Joshua Caron <joshua@joshuacaron.ca>",
   "license": "MIT",
