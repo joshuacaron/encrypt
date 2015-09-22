@@ -1,4 +1,32 @@
-var crypto = require('crypto')
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: encrypt.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: encrypt.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>var crypto = require('crypto')
 var Polynomial = require('./polynomial.js')
 var poly = require('./polynomial-operations.js')
 
@@ -68,7 +96,7 @@ function generatePolynomial(order, callback) {
     }
   }
 
-  for (var i = 0; i < order; ++i) {
+  for (var i = 0; i &lt; order; ++i) {
     generateSecureRandom(100000000, 999999999, addCoefficient)
   }
 }
@@ -82,7 +110,7 @@ function generatePolynomial(order, callback) {
 function generateKeys(numKeys, polynomial) {
   var keys = []
 
-  for (var i = 2; i < numKeys + 2; ++i) {
+  for (var i = 2; i &lt; numKeys + 2; ++i) {
     var key = numDecryptKeys + 'x' + i + 'y' + polynomial.evaluate(i).toString(16)
     keys.push(key)
   }
@@ -97,7 +125,7 @@ function generateKeys(numKeys, polynomial) {
  */
 function cloneArray(array) {
   var output = []
-  for (var i = 0; i < array.length; ++i) {
+  for (var i = 0; i &lt; array.length; ++i) {
     output.push(array[i])
   }
   return output
@@ -113,7 +141,7 @@ function compareArrays(ar1, ar2) {
   if (ar1.length !== ar2.length) {
     return false
   } else {
-    for (var i = 0; i < ar1.length; ++i) {
+    for (var i = 0; i &lt; ar1.length; ++i) {
       if (ar1[i] !== ar2[i]) {
         return false
       }
@@ -132,14 +160,14 @@ function compareArrays(ar1, ar2) {
 function iterateIndices(indices, maxSize, omitIndex) {
   for (var i = indices.length - 1; i >= 0; --i) {
     if (i !== omitIndex) {
-      if (indices[i] <= maxSize - (indices.length - i)) {
+      if (indices[i] &lt;= maxSize - (indices.length - i)) {
         indices[i] += 1
 
-        for (var j = i + 1; j < indices.length - 1; ++j) {
+        for (var j = i + 1; j &lt; indices.length - 1; ++j) {
           indices[j] = indices[j - 1] + 1
         }
 
-        for (var k = 0; k < indices.length; ++k) {
+        for (var k = 0; k &lt; indices.length; ++k) {
           if (indices[k] === omitIndex) {
             return iterateIndices(indices, maxSize, omitIndex)
           }
@@ -164,7 +192,7 @@ function combinationsHelper(currentSum, array, indices, omitIndex) {
   console.log(currentSum + ' ' + array + ' ' + indices)
   var oldIndices = cloneArray(indices)
   var temp = 1
-  for (var i = 0; i < indices.length; ++i) {
+  for (var i = 0; i &lt; indices.length; ++i) {
     temp = temp * array[indices[i]]
   }
   currentSum += temp
@@ -192,7 +220,7 @@ function combinationsHelper(currentSum, array, indices, omitIndex) {
  */
 function combinations(array, n, omitIndex) {
   var indices = []
-  for (var i = 0; i < n; ++i) {
+  for (var i = 0; i &lt; n; ++i) {
     indices.push(i)
   }
   return combinationsHelper(0, array, indices, omitIndex)
@@ -206,7 +234,7 @@ function combinations(array, n, omitIndex) {
  */
 function createLagrangeBasisPolynomial(array, index) {
   var divisor = 1;
-  for (var i = 0; i < array.length; ++i) {
+  for (var i = 0; i &lt; array.length; ++i) {
     if (i !== index) {
       divisor = divisor * (array[index] - array[i])
     }
@@ -214,7 +242,7 @@ function createLagrangeBasisPolynomial(array, index) {
 
   var coefficients = []
 
-  for (var j = 0; j < array.length; ++j) {
+  for (var j = 0; j &lt; array.length; ++j) {
     var temp = combinations(array, array.length - j, index) / divisor
 
     if ((array.length - i) % 2 === 1) {
@@ -230,13 +258,13 @@ function createLagrangeBasisPolynomial(array, index) {
 
 function interpolate(xs, ys, order) {
   var coefficients = []
-  for (var i = 0; i < order + 1; ++i) {
+  for (var i = 0; i &lt; order + 1; ++i) {
     coefficients.push(0)
   }
 
   var output = new Polynomial(coefficients)
 
-  for (var j = 0; j < order + 1; ++j) {
+  for (var j = 0; j &lt; order + 1; ++j) {
     var lbp = createLagrangeBasisPolynomial(xs, j)
     console.log(lbp)
     lbp.scalarMult(ys[j])
@@ -245,3 +273,26 @@ function interpolate(xs, ys, order) {
 
   return output
 }
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-polynomial.html">polynomial</a></li><li><a href="module-polynomial-operations.html">polynomial-operations</a></li></ul><h3>Classes</h3><ul><li><a href="module-polynomial-Polynomial.html">Polynomial</a></li></ul><h3>Global</h3><ul><li><a href="global.html#cloneArray">cloneArray</a></li><li><a href="global.html#combinations">combinations</a></li><li><a href="global.html#combinationsHelper">combinationsHelper</a></li><li><a href="global.html#compareArrays">compareArrays</a></li><li><a href="global.html#createLagrangeBasisPolynomial">createLagrangeBasisPolynomial</a></li><li><a href="global.html#decrypt">decrypt</a></li><li><a href="global.html#encrypt">encrypt</a></li><li><a href="global.html#generateKeys">generateKeys</a></li><li><a href="global.html#generatePolynomial">generatePolynomial</a></li><li><a href="global.html#generateSecureRandom">generateSecureRandom</a></li><li><a href="global.html#iterateIndices">iterateIndices</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.2</a> on Tue Sep 22 2015 13:29:22 GMT-0400 (EDT)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
