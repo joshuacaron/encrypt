@@ -1,6 +1,5 @@
 var crypto = require('crypto')
 var Polynomial = require('./polynomial.js')
-var poly = require('./polynomial-operations.js')
 
 var message = 'test123'
 var password = 'swagyolo'
@@ -240,7 +239,7 @@ function interpolate(xs, ys, order) {
     var lbp = createLagrangeBasisPolynomial(xs, j)
     console.log(lbp)
     lbp.scalarMult(ys[j])
-    output = poly.add(output, lbp)
+    output = Polynomial.add(output, lbp)
   }
 
   return output

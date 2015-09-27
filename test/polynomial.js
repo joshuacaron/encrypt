@@ -1,6 +1,5 @@
 var assert = require('assert')
 var Polynomial = require('../polynomial.js')
-var poly = require('../polynomial-operations.js')
 
 describe('Polynomial', function() {
   describe('new Polynomial(coefficients)', function() {
@@ -70,11 +69,11 @@ describe('Polynomial', function() {
     })
   })
 
-  describe('add(poly1, poly2)', function() {
+  describe('.add(poly1, poly2)', function() {
     it('should return the other polynomial if one is constant at 0', function() {
       var x = new Polynomial([0])
       var y = new Polynomial([1,4,5])
-      var z = poly.add(x, y)
+      var z = Polynomial.add(x, y)
       assert.deepEqual(z, y)
     })
 
@@ -82,14 +81,14 @@ describe('Polynomial', function() {
       var x = new Polynomial([2,1,1])
       var y = new Polynomial([-1,-1,-1])
       var z = new Polynomial([1])
-      assert.deepEqual(poly.add(x,y), z)
+      assert.deepEqual(Polynomial.add(x,y), z)
     })
 
     it('should add 2 polynomials by adding like coefficients', function() {
       var x = new Polynomial([5,7,-4])
       var y = new Polynomial([3,1,2])
       var z = new Polynomial([8,8,-2])
-      assert.deepEqual(poly.add(x,y), z)
+      assert.deepEqual(Polynomial.add(x,y), z)
     })
   })
 })
