@@ -1,55 +1,12 @@
-var crypto = require('crypto')
-var Polynomial = require('./polynomial.js')
+var Polynomial = require('./lib/polynomial.js')
+var crypto = require('./lib/crypto-functions.js')
 
 var message = 'test123'
 var password = 'swagyolo'
-var algorithm = 'aes-256-cbc'
 var numEncryptKeys = 1
 var numDecryptKeys = 1
 
-/**
- * Encrypts a string with the globally set algorithm and password.
- * @param  {string} msg The message to be encrypted.
- * @return {string}     The hex value of the encrypted message.
- */
-function encrypt(msg) {
-  var cipher = crypto.createCipher(algorithm, password)
-  cipher.setEncoding('hex')
-  cipher.write(msg)
-  cipher.end()
-  var encryptedMsg = cipher.read()
-  return encryptedMsg
-}
 
-/**
- * Decrypts a string with the globally set algorithm and password.
- * @param  {string} msg The hex representation of the string to decrypt (having previously encrypted with encrypt function).
- * @return {string}     Returns the utf8 value of the decrypted string.
- */
-function decrypt(msg) {
-  var decipher = crypto.createDecipher(algorithm, password)
-  decipher.setEncoding('utf8')
-  decipher.write(msg, 'hex')
-  decipher.end()
-  var originalMsg = decipher.read()
-  return originalMsg
-}
-
-/**
- * Asynchronously generates a cryptographically secure random number in the specified range using crypto wrapper for openssl.
- * @param  {int}   min         The minimum value the random number can take.
- * @param  {int}   max         The maximum value the random number can take.
- * @param  {Function} callback A callback with the a single parameter for the randomly generated value.
- */
-function generateSecureRandom(min, max, callback) {
-  crypto.randomBytes(8, function(ex, buf) {
-    if (ex) { throw ex }
-
-    var integer = parseInt(buf.toString('hex'), 16) // Convert to integer. Need double the number of bytes.
-    var random = Math.round(integer / 0xffffffffffffffff * (max - min) + min) // Normalize the number between 0 to 1 and then scale it to the correct range
-    callback(random) // crypto.randomBytes is asynchronous so we need to return the random number as a callback
-  })
-}
 
 /**
  * Generates a polynomial of specified order with cryptographically secure random coefficients.
@@ -68,7 +25,10 @@ function generatePolynomial(order, callback) {
   }
 
   for (var i = 0; i < order; ++i) {
-    generateSecureRandom(100000000, 999999999, addCoefficient)
+    crypto.generateSecureRandom(100000000, 999999999)
+    .then(function(randomNum) {
+      addCoefficient(randomNum)
+    })
   }
 }
 

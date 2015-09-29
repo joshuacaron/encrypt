@@ -1,5 +1,5 @@
 var assert = require('assert')
-var Polynomial = require('../polynomial.js')
+var Polynomial = require('./../lib/polynomial.js')
 
 describe('Polynomial', function() {
   describe('new Polynomial(coefficients)', function() {
