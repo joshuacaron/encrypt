@@ -1,0 +1,24 @@
+<!doctype html>
+<html>
+<head>
+
+</head>
+<body>
+<form id="encrypt" method="POST" action="/api/encrypt">
+  <label>Number of Keys: <input name = 'numKeys' type="text"></label><br>
+  <label>Number of Decryption Keys: <input name='numDecryptKeys' type="text"></label><br>
+  <textarea name="message"></textarea>
+  <input type="submit" value="Submit">
+</form>
+
+<br>
+
+<form id="decrypt" method="POST" action="/api/decrypt">
+  <label>Type your message:
+  <textarea name="encryptedmessage"></textarea>
+  </label><br>
+  <textarea name="keys"></textarea>
+  <input type="submit" value="Submit">
+</form>
+</body>
+</html>
