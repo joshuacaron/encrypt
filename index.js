@@ -10,6 +10,10 @@ app.use(bodyParser.urlencoded({extended: false}))
 // parse application/json
 app.use(bodyParser.json())
 
+app.use('/bootstrap', express.static('bootstrap'))
+app.use('/css', express.static('css'))
+app.use('/scripts', express.static('scripts'))
+
 app.get('/', function(req, res) {
   res.sendFile('index.html', {root: __dirname})
 })
@@ -42,7 +46,7 @@ app.post('/api/decrypt', function(req, res) {
     res.send(output)
   })
   .catch(function(error) {
-    res.send('<p>Your keys or message were entered incorrectly.</p>')
+    res.send('<h4>Your keys or message were entered incorrectly.</h4>')
   }, /bad decrypt/)
   .catch(function(error) {
     res.send('Error: ' + error)

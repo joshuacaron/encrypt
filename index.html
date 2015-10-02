@@ -1,24 +1,50 @@
 <!doctype html>
 <html>
 <head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="/bootstrap/css/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="/css/main.css">
 
 </head>
 <body>
-<form id="encrypt" method="POST" action="/api/encrypt">
-  <label>Number of Keys: <input name = 'numKeys' type="text"></label><br>
-  <label>Number Keys to Decrypt Message: <input name='numDecryptKeys' type="text"></label><br>
-  <textarea name="message"></textarea>
-  <input type="submit" value="Submit">
-</form>
+<div class="container">
+  <h1><a href="/">encrypt</a></h1>
 
-<br>
+  <h4>A simple web app to encrypt messages with support for multiple encryption keys, and requiring multiple keys to decrypt a message.
+  Note that this app has not undergone a rigorous security audit and thus is not suitable for serious cryptographic use.</h4>
 
-<form id="decrypt" method="POST" action="/api/decrypt">
-  <label>Type your message:
-  <textarea name="encryptedmessage"></textarea>
-  </label><br>
-  <textarea name="keys"></textarea>
-  <input type="submit" value="Submit">
-</form>
+  <hr>
+
+  <div id="output" class="bg-primary"></div>
+
+  <form id="encrypt" method="POST" action="/api/encrypt">
+    <label for="numKeys">Number of Keys:</label>
+    <input class="form-control" id="numKeys" name='numKeys' type="text">
+
+    <label for="numDecryptKeys">Number Keys to Decrypt Message:</label>
+    <input name='numDecryptKeys' id="numDecryptKeys" class="form-control" type="text">
+
+    <label for="message">Message to Encrypt:</label>
+    <textarea name="message" id="messageEncrypt" class="form-control" rows="5"></textarea>
+
+    <input type="submit" value="Encrypt" class="btn btn-primary submit-button" id="submitEncrypt">
+  </form>
+
+
+  <form id="decrypt-form" method="POST" action="/api/decrypt">
+    <label for="encryptedmessage">Encrypted Message:</label>
+    <textarea name="encryptedmessage" id="encryptedmessage" class="form-control" rows="5"></textarea>
+
+    <label for="keys">Enter your Keys (One Per Line):</label>
+    <textarea name="keys" id="keys" class="form-control" rows="5"></textarea>
+
+    <input type="submit" value="Decrypt" class="btn btn-primary submit-button" id="submitDecrypt">
+  </form>
+
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src="/bootstrap/js/bootstrap.min.js"></script>
+<script src="/scripts/main.js"></script>
 </body>
 </html>
