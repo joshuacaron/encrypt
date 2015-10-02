@@ -18,12 +18,29 @@ describe('Polynomial', function() {
   describe('.coefficients', function() {
     it('should be an array', function() {
       var x = new Polynomial([1,2,3])
-      assert.equal(x.coefficients instanceof Array, true)
+      assert(x.coefficients instanceof Array)
     })
 
     it('should be equal to the input array', function() {
       var x = new Polynomial([1,2,3])
       assert.deepEqual(x.coefficients, [1,2,3])
+    })
+  })
+
+  describe('.order', function() {
+    it('should return a number', function() {
+      var x = new Polynomial([1,2,3])
+      assert.equal(typeof x.order, 'number')
+    })
+
+    it('should be one less than the length of the coefficients array', function() {
+      var x = new Polynomial([1,2,3,4])
+      assert.equal(x.order, 3)
+    })
+
+    it('should be 0 if the polynomial is empty', function() {
+      var x = new Polynomial()
+      assert.equal(x.order, 0)
     })
   })
 
