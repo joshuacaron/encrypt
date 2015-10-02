@@ -1,8 +1,6 @@
-var crypto = require('./lib/crypto-functions.js')
-var keys = require('./lib/keys.js')
 var express = require('express')
 var bodyParser = require('body-parser')
-var Polynomial = require('./lib/polynomial.js')
+var encrypt = require('./encrypt.js')
 
 var app = express()
 
@@ -17,46 +15,38 @@ app.get('/', function(req, res) {
 })
 
 app.post('/api/encrypt', function(req, res) {
-  var numKeys = parseInt(req.body.numKeys)
-  var numDecryptKeys = parseInt(req.body.numDecryptKeys)
-  var message = req.body.message
-  keys.generateKeys(numKeys, numDecryptKeys)
-  .then(function(keys) {
-    res.write(crypto.encrypt(message, keys.polynomial.coefficients[0].toString()))
+  var numKeys = parseInt(req.body.numKeys.trim())
+  var numDecryptKeys = parseInt(req.body.numDecryptKeys.trim())
+  var message = req.body.message.trim()
 
-    for (var i = 0; i < keys.length; ++i) {
-      res.write('\r\n' + keys[i])
-    }
+  if (numKeys < numDecryptKeys) {
+    res.send('<p>The number of encryption keys must be at least as many as the number of keys to decrypt the message.</p>')
+  }
 
-    res.end()
+  encrypt.encrypt(numKeys, numDecryptKeys, message)
+  .then(function(output) {
+    res.send(output)
   })
   .catch(function(error) {
-    console.error(error)
+    res.send('<p>There was an error encrypting your message see: ' + error + '</p>')
   })
+
 })
 
 app.post('/api/decrypt', function(req, res) {
-  var keys = req.body.keys
-  var message = req.body.encryptedmessage
+  var keys = req.body.keys.trim()
+  var message = req.body.encryptedmessage.trim()
 
-  keys = keys.split('\r\n')
-
-  var xs = []
-  var ys = []
-  var split = []
-  for (var i = 0; i < keys.length; ++i) {
-    split.push(keys[i].split('.'))
-  }
-  var numKeys = parseInt(split[0][0])
-  console.log(split)
-  for (var j = 0; j < numKeys; ++j) {
-    xs.push(parseInt(split[j][1]))
-    ys.push(parseInt(split[j][2], 16))
-  }
-  var key = Polynomial.interpolate(xs,ys).toString()
-  console.log(key)
-  res.write(crypto.decrypt(message,key))
-  res.end()
+  encrypt.decrypt(keys, message)
+  .then(function(output) {
+    res.send(output)
+  })
+  .catch(function(error) {
+    res.send('<p>Your keys or message were entered incorrectly.</p>')
+  }, /bad decrypt/)
+  .catch(function(error) {
+    res.send('Error: ' + error)
+  })
 })
 
 app.listen(3000)
