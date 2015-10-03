@@ -3,24 +3,28 @@ var bodyParser = require('body-parser')
 var encrypt = require('./encrypt.js')
 var helmet = require('helmet')
 var csp = require('helmet-csp')
+var favicon = require('serve-favicon')
 
 var app = express()
 
 app.use(helmet())
 
 app.use(csp({
+  scriptSrc: ["'self'", "https://ajax.googleapis.com"],
   defaultSrc: ["'self'"],
-  sandbox: ['allow-forms', 'allow-scripts'],
-  setAllHeaders: true,
-  safari5: false
+  sandbox: ['allow-forms', 'allow-scripts', 'allow-same-origin'],
+  allHeaders: true
 }))
+
+app.use(favicon(__dirname + '/public/favicon.png'))
+
 
 app.use(bodyParser.urlencoded({extended: false}))
 app.use(bodyParser.json())
 
 
 app.use('/bootstrap', express.static('node_modules/bootstrap/dist'))
-app.use('/', express.static('www'))
+app.use('/', express.static('public'))
 
 
 app.post('/api/encrypt', function(req, res) {
