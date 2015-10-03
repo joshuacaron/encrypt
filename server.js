@@ -4,19 +4,13 @@ var encrypt = require('./encrypt.js')
 
 var app = express()
 
-// parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({extended: false}))
-
-// parse application/json
 app.use(bodyParser.json())
 
-app.use('/bootstrap', express.static('bootstrap'))
-app.use('/css', express.static('css'))
-app.use('/scripts', express.static('scripts'))
 
-app.get('/', function(req, res) {
-  res.sendFile('index.html', {root: __dirname})
-})
+app.use('/bootstrap', express.static('node_modules/bootstrap/dist'))
+app.use('/', express.static('www'))
+
 
 app.post('/api/encrypt', function(req, res) {
   var numKeys = parseInt(req.body.numKeys.trim())
