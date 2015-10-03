@@ -42,7 +42,7 @@ function decrypt(keys, message) {
       key = Polynomial.interpolate(xs,ys).toString()
     } else {
       // Can't interpolate a constant so take constant directly
-      key = ys[0].toString()
+      key = (ys[0] - xs[0]*9999).toString()
     }
 
     var output = '<h4>Your Original Message:</h4><p>'
