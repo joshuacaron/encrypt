@@ -1,8 +1,19 @@
 var express = require('express')
 var bodyParser = require('body-parser')
 var encrypt = require('./encrypt.js')
+var helmet = require('helmet')
+var csp = require('helmet-csp')
 
 var app = express()
+
+app.use(helmet())
+
+app.use(csp({
+  defaultSrc: ["'self'"],
+  sandbox: ['allow-forms', 'allow-scripts'],
+  setAllHeaders: true,
+  safari5: false
+}))
 
 app.use(bodyParser.urlencoded({extended: false}))
 app.use(bodyParser.json())
