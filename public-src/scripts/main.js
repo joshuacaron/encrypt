@@ -22,7 +22,6 @@ $(document).ready(function() {
     var data = {}
     data.encryptedmessage = $('#encryptedmessage').val()
     data.keys = $('#keys').val()
-    console.log(data)
     $.post('/api/decrypt', data, function(output) {
       $('#output').html(output)
       $('#output').addClass('output')

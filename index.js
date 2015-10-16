@@ -1,8 +1,19 @@
 var express = require('express')
 var bodyParser = require('body-parser')
-var encrypt = require('./encrypt.js')
+var encrypt = require('./lib/encrypt.js')
+var helmet = require('helmet')
+var csp = require('helmet-csp')
 
 var app = express()
+
+app.use(helmet())
+
+app.use(csp({
+  defaultSource: ["'self'"],
+  sandbox: ['allow-forms', 'allow-scripts', 'allow-same-origin'],
+  scriptSource: ["'self'", 'ajax.googleapis.com'],
+  connectSource: ["'self'"]
+}))
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({extended: false}))
@@ -10,13 +21,8 @@ app.use(bodyParser.urlencoded({extended: false}))
 // parse application/json
 app.use(bodyParser.json())
 
-app.use('/bootstrap', express.static('bootstrap'))
-app.use('/css', express.static('css'))
-app.use('/scripts', express.static('scripts'))
-
-app.get('/', function(req, res) {
-  res.sendFile('index.html', {root: __dirname})
-})
+app.use('/bootstrap', express.static('node_modules/bootstrap/dist'))
+app.use('/', express.static('public'))
 
 app.post('/api/encrypt', function(req, res) {
   var numKeys = parseInt(req.body.numKeys.trim())
@@ -24,7 +30,10 @@ app.post('/api/encrypt', function(req, res) {
   var message = req.body.message.trim()
 
   if (numKeys < numDecryptKeys) {
-    res.send('<p>The number of encryption keys must be at least as many as the number of keys to decrypt the message.</p>')
+    res.send('<p>The number of encryption keys must be at least as ' +
+     'many as the number of keys to decrypt the message.</p>')
+  } else if (numKeys <= 0 || numDecryptKeys <= 0) {
+    res.send('<p>You must have at least one key.</p>')
   }
 
   encrypt.encrypt(numKeys, numDecryptKeys, message)
